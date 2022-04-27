@@ -8,41 +8,54 @@ def is_valid_guess(guess):
 # @see https://stackoverflow.com/a/15195942/4896064
 
 
-def mask_word(state, word, guess):
-    state = list(state)
+def mask_word(word, guesses):
+    state = []
     for i in range(len(word)):
-        if word[i] == guess:
-            state[i] = guess
-    return "".join(state)
+        state.append("_")
+    for i in range(len(word)):
+        # print(word[i])
+        if word[i] in guesses:
+            state[i] = word[i]
+    return state
 
 
 def play_game(file):
     with open(file, "r") as f:
-        file_string = f.read()
+        file_string = f.read().upper()
         print(f"Word length is {len(file_string)}.")
         file_string = file_string.lower()
     # above makes uppercase letters for visibility purpose
     # below makes characters of word into list
         word_list = list(file_string)
-        print(word_list)
-
+        # print(word_list)
+    chance = 8
+    correct_guess = len(word_list)
     guesses = []
-    # get guess  
-    guess = input("Please guess a letter: ").lower()
-    print(guess)
-    # add guess to guesses list
-    guesses.append(guess)
-    if guess in word_list:
-        print("You guessed correctly")
-    else:
-        print("Sorry, try again")
+
+    while True:
+        print(mask_word(word_list, guesses))
+        guess = input("Please guess a letter: ").upper()
+        print(guess)
+        # add guess to guesses list
+        guesses.append(guess)
+        if guess in word_list:
+            print("You guessed correctly.")
+            correct_guess -= 1
+            if correct_guess == 0:
+                print("Congratulations, you won")
+        else:
+            if guess in guesses:
+                print(f"You already guessed {guess}.")
+            chance -= 1
+            print("Sorry, try again")
+        if chance == 0:
+            print("You have run out of guesses, the word is:", file_string)
+            break
     # then check guess against word's letters
     # tell user if guess is in word
     # user can then guess again
 
-    # for guessesTaken in file_string:
-    #     if guess == word:
-    #         print("You guessed correctly")
+
 
 # if __name__ == "__main__":
 play_game("test-word.txt")
