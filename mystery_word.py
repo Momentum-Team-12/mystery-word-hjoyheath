@@ -7,7 +7,7 @@ def play_game(file):
         file_string = f.read().lower()
         file_list = file_string.split()
         random_word = random.choice(file_list)
-        print(random_word)
+        # print(random_word)
     
         print(f"Word length is {len(random_word)}.")
         file_string = file_string.lower()
