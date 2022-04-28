@@ -2,26 +2,6 @@
 import random
 
 
-def is_valid_guess(guess):
-    if len(guess) == 1 & guess.isalpha():
-        return True
-    else:
-        return False
-
-# @see https://stackoverflow.com/a/15195942/4896064
-
-
-def mask_word(word, guesses):
-    state = []
-    for i in range(len(word)):
-        state.append("_")
-    for i in range(len(word)):
-        # print(word[i])
-        if word[i] in guesses:
-            state[i] = word[i]
-    return state
-
-
 def play_game(file):
     with open('words.txt') as f:
         file_string = f.read().lower()
@@ -36,32 +16,33 @@ def play_game(file):
         # word_list = file_string.split()
         # print(word_list)
     chance = 8
-    correct_guess = len(random_word)
-    guesses = ' '
+    guesses = []
 
     while True:
         guess = input("Please guess a letter: ").lower()
         
         # print(guess)
-        # add guess to guesses list  
+        incomplete = 0
         if guess in guesses:
             print(f"Whoops you already guessed {guess}.")
         elif guess in random_word:
-            print(guess, end=" ")
-            print()
+            print(guess)
+            guesses.append(guess)
+            for letter in random_word:
+                if letter in guesses:
+                    print(letter, end=' ')
+                else:
+                    incomplete += 1
+                    print("_ ", end=' ')
             print("You guessed correctly.")
-
-            correct_guess -= 1
-            guesses += guess
-            # guesses.append(guess)
-            if correct_guess == 0:
+            if incomplete == 0:
                 print("Congratulations, you won, the word is:", random_word)
                 break
         elif guess not in random_word:
             if guess in guesses:
                 print(f"Whoops you already guessed {guess}.")
             elif guess not in guesses:
-                # guesses.append(guess)
+                guesses.append(guess)
                 chance -= 1
                 print(f"Sorry, try again, you have {chance} chances left.")
             if chance == 0:
